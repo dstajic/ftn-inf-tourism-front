@@ -1,0 +1,13 @@
+@import "../../../styles/global.scss";
+
+h2{
+    text-align: center;
+}
+button{
+    transition: transform 0.1s ease-in;
+    &:hover{
+        cursor:pointer;
+        transform: scale(1.02);
+         
+    }
+}
