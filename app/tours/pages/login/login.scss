@@ -14,7 +14,14 @@ h2{
     padding: 10px;
     box-sizing: border-box;
   }
-
+  button{
+    transition: transform 0.1s ease-in;
+    &:hover{
+        cursor:pointer;
+        transform: scale(1.02);
+         
+    }
+  }
   .input-wrapper {
     display: flex;
     align-items: center;
@@ -31,5 +38,6 @@ h2{
     }
     
   }
+  
 }
 
