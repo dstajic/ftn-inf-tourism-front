@@ -1,3 +1,9 @@
+import { TourServices } from '../../../../dist/tours/services/tour.service.js';
+
+const tourService = new TourServices();
+
+tourService.getTourById(1); // Fetch tour with ID 1
+
 type TourStatus = 'u pripremi' | 'aktivna' | 'završena';
 
 interface User {
