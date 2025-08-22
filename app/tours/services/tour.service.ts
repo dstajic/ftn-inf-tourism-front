@@ -3,29 +3,30 @@ export class TourServices {
   private serverUrl = 'http://localhost:48696/';
   private endpoint = 'api/tours';
   
-  getAllTours(guideId:number,page:number,pageSize:number,orderBy:Text,orderDirection:Text):void{
-      fetch(`${this.serverUrl}${this.endpoint}?guideId=${guideId}&page=${page}&pageSize=${pageSize}&orderBy=${orderBy}&orderDirection=${orderDirection}`)
-      .then(response=>{
-        if(!response.ok)
-        {
-          throw new Error('Request failed. Status: '+response.status)
-        }
-        return response.json();
-      })
-      .then(tours => console.log('Retrived tour:', tours))
-      .catch(error=>console.error('Error:', error.message));
-
-  }
-  getTourById(id: number): void {
-    fetch(this.serverUrl + this.endpoint + "/" +id)
+  getAllTours(
+  guideId: number,
+  page: number,
+  pageSize: number,
+  orderBy: string,
+  orderDirection: string
+): Promise<Tour[]> {
+  return fetch(`${this.serverUrl}${this.endpoint}?guideId=${guideId}&page=${page}&pageSize=${pageSize}&orderBy=${orderBy}&orderDirection=${orderDirection}`)
+    .then(response => {
+      if (!response.ok) throw new Error('Request failed. Status: ' + response.status);
+      return response.json() as Promise<Tour[]>;
+    })
+    
+    
+}
+  getTourById(id: number): Promise<Tour> {
+    return fetch(this.serverUrl + this.endpoint + "/" +id)
       .then(response => {
         if (!response.ok) {
           throw new Error('Request failed. Status: ' + response.status);
         }
         return response.json();
       })
-      .then(tour => console.log('Retrieved tour:', tour)) // <-- log here
-      .catch(error => console.error('Error:', error.message));
+      
   }
   createTour(newTour:Tour):void{
     fetch(this.serverUrl + this.endpoint, {
@@ -81,5 +82,4 @@ export class TourServices {
     .catch(error=>console.error('Error', error.message));
   }
   
-  //TODO: Get All Tours
 }

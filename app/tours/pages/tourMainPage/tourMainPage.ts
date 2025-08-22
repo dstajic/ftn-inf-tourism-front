@@ -2,7 +2,7 @@ import { TourServices } from '../../../../dist/tours/services/tour.service.js';
 
 const tourService = new TourServices();
 
-tourService.getTourById(1); // Fetch tour with ID 1
+
 
 type TourStatus = 'u pripremi' | 'aktivna' | 'završena';
 
@@ -29,8 +29,8 @@ class Tour {
   id: number;
   name: string;
   description: string;
-  startDateTime: Date;
-  maxTourists: number;
+  dateTime: Date;
+  maxGuests: number;
   status: TourStatus;
   guide?: User;
   guideId: number;
@@ -40,8 +40,8 @@ class Tour {
     id: number,
     name: string,
     description: string,
-    startDateTime: Date,
-    maxTourists: number,
+    dateTime: Date,
+    maxGuests: number,
     guideId: number,
     guide?: User,
     keyPoints: KeyPoint[] = []
@@ -49,8 +49,8 @@ class Tour {
     this.id = id;
     this.name = name;
     this.description = description;
-    this.startDateTime = startDateTime;
-    this.maxTourists = maxTourists;
+    this.dateTime = dateTime;
+    this.maxGuests = maxGuests;
     this.status = 'u pripremi';
     this.guideId = guideId;
     this.guide = guide;
@@ -66,7 +66,7 @@ class Tour {
   }
 }
 
-const tura1 = new Tour(
+/*const tura1 = new Tour(
   1,
   'Turistička atrakcija 1',
   'Opis prve turističke atrakcije',
@@ -146,36 +146,45 @@ const tura10 = new Tour(
   40,
   10
 );
+*/
 
-const tourList: Tour[] = [tura1, tura2, tura3, tura4, tura5, tura6, tura7,tura8,tura9,tura10];
-console.log(tourList);
-addEventListener('DOMContentLoaded', () => {
+
+
+document.addEventListener('DOMContentLoaded', () => {
   const tourListElement = document.getElementById('tourList');
-  for(const tour of tourList)
-  {
-    const tourElement = document.createElement('div');
-    tourElement.classList.add('tourCard');
-    tourElement.innerHTML = `
-      <h2>${tour.name}</h2>
-      <p>${tour.description}</p>
-      <p>Početak: ${tour.startDateTime.toLocaleString()}</p>
-      <p>Maksimalni broj putnika: ${tour.maxTourists}</p>
-      <p>Status: ${tour.status}</p>
-    `;
-    const settingsDiv = document.createElement('div');
-    settingsDiv.className = 'settingsDiv';
-    
-    const editButton = document.createElement('button');
-    editButton.classList.add('editButton');
-    editButton.textContent = '⚙️';
-    editButton.addEventListener('click', () => {
-      console.log(`Uredi turu: ${tour.name}`);
-    });
-    settingsDiv.appendChild(editButton);
-    tourElement.appendChild(settingsDiv); 
-    tourListElement.appendChild(tourElement);
-    
-  }
-  
 
+  tourService.getAllTours(0, 1, 10, 'Name', 'ASC')
+    .then((tourList: Tour[]) => {
+      // tourList is guaranteed to be an array
+      for (const tour of tourList) {
+        console.log(1);
+        const tourElement = document.createElement('div');
+        tourElement.classList.add('tourCard');
+        tourElement.innerHTML = `
+          <h2>${tour.name}</h2>
+          <p>${tour.description}</p>
+          <p>Početak: ${new Date(tour.dateTime).toLocaleString()}</p>
+          <p>Maksimalni broj putnika: ${tour.maxGuests}</p>
+          <p>Status: ${tour.status}</p>
+        `;
+
+        const settingsDiv = document.createElement('div');
+        settingsDiv.className = 'settingsDiv';
+
+        const editButton = document.createElement('button');
+        editButton.classList.add('editButton');
+        editButton.textContent = '⚙️';
+        editButton.addEventListener('click', () => {
+          console.log(`Uredi turu: ${tour.name}`);
+        });
+
+        settingsDiv.appendChild(editButton);
+        tourElement.appendChild(settingsDiv);
+        tourListElement?.appendChild(tourElement);
+      }
+      console.log(tourList);
+    })
+    .catch(err => {
+      console.error("Failed to load tours:", err);
+    });
 });
