@@ -1,4 +1,9 @@
 import { Tour } from "../models/tour.model";
+export interface TourResults {
+  results: Tour[];
+  totalCount: number;
+}
+
 export class TourServices {
   private serverUrl = 'http://localhost:48696/';
   private endpoint = 'api/tours';
@@ -10,13 +15,21 @@ export class TourServices {
   orderBy: string,
   orderDirection: string
 ): Promise<Tour[]> {
-  return fetch(`${this.serverUrl}${this.endpoint}?guideId=${guideId}&page=${page}&pageSize=${pageSize}&orderBy=${orderBy}&orderDirection=${orderDirection}`)
+  const url = `${this.serverUrl}${this.endpoint}?guideId=${guideId}&page=${page}&pageSize=${pageSize}&orderBy=${orderBy}&orderDirection=${orderDirection}`;
+  
+  return fetch(url)
     .then(response => {
       if (!response.ok) throw new Error('Request failed. Status: ' + response.status);
-      return response.json() as Promise<Tour[]>;
+      return response.json();
     })
-    
-    
+    .then(data => {
+      console.log("Raw API response:", data);  
+      return data.data;  
+    })
+    .catch(error => {
+      console.error('Error fetching tours:', error);
+      throw error;
+    });
 }
   getTourById(id: number): Promise<Tour> {
     return fetch(this.serverUrl + this.endpoint + "/" +id)

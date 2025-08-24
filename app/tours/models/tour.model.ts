@@ -1,13 +1,15 @@
 import { KeyPoint } from "./keypoint.model";
 import { User } from "../../users/model/user.model";
+type TourStatus = 'u pripremi' | 'aktivna' | 'završena';
+
 export interface Tour{
 
  id:number;
- name:Text;
- description:number;
- DateTime:Date;
+ name:string;
+ description:string;
+ dateTime:Date;
  maxGuests:number;
- status?:Text;
+ status?:TourStatus;
  guide:User;
  guideID:number;
  keyPoints:KeyPoint[];
