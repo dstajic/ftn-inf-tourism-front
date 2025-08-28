@@ -1,61 +1,46 @@
-import { UserService } from "../../service/user.service.js";
+import { UserService } from "../../../../dist/users/service/user.service.js";
 
-const userService = new UserService();
-const loginLink = document.querySelector('#login') as HTMLElement;
-const logoutLink = document.querySelector('#logout') as HTMLElement;
-const submitButton = document.querySelector("#submit") as HTMLElement;
+const userService = new UserService(); 
+const hyperlink = document.getElementById('hyperlink'); //text is either, register here or login here
+const h2 = document.getElementById('log/register'); //text is either login or register
+const submitButton = document.getElementById('loginFormSubmit'); //text is either login or register
+const hyperlinkPrologue = document.getElementById('hyperlinkPrologue'); //text is either, register here or login here
 
-function setUserLoginState(isLoggedIn: boolean) {
-    if (isLoggedIn) {
-        loginLink.style.display = 'none';
-        logoutLink.style.display = 'block';
-    } else {
-        loginLink.style.display = 'block';
-        logoutLink.style.display = 'none';
+
+const username = document.getElementById('username') as HTMLInputElement | null;
+const password = document.getElementById('password') as HTMLInputElement | null;
+document.addEventListener("DOMContentLoaded", () => {
+  const password = document.getElementById('password') as HTMLInputElement | null;
+  const togglePassword = document.getElementById('togglePassword') as HTMLElement | null;
+
+  if (password && togglePassword) {
+    togglePassword.addEventListener('click', () => {
+      const isPassword = password.type === 'password';
+      password.type = isPassword ? 'text' : 'password';
+      togglePassword.textContent = isPassword ? '🙈' : '👁️';
+    });
+  }
+});
+
+hyperlink.addEventListener('click', () => {
+    if (hyperlink.textContent === 'Register here') {
+        h2.textContent = 'Register';
+        hyperlinkPrologue.textContent = 'Already have an account?';
+        submitButton.textContent = 'Register';
+        hyperlink.textContent = 'Login here';
     }
-}
-
-function handleLogin(event: Event) {
-    event.preventDefault();
-    
-    const form = document.querySelector("form") as HTMLFormElement;
-    const formData = new FormData(form);
-    const username = formData.get("username") as string;
-    const password = formData.get("password") as string;
-
-    userService.login(username, password)
-        .then((user) => {
-            localStorage.setItem('username', user.username);
-            localStorage.setItem('role', user.role);
-            setUserLoginState(true);
-        })
-        .catch((error) => {
-            console.error('Login failed', error.message);
-        });
-}
-
-function handleLogout() {
-    localStorage.removeItem('username');
-    localStorage.removeItem('role');
-    setUserLoginState(false);
-}
-
-function checkLoginStatus() {
-    const username = localStorage.getItem('username');
-    if (username) {
-        setUserLoginState(true);
-    } else {
-        setUserLoginState(false);
+    else {
+        h2.textContent = 'Login';
+        hyperlinkPrologue.textContent = 'Don\'t have an account?';
+        submitButton.textContent = 'Login';
+        hyperlink.textContent = 'Register here';
     }
-}
+});
 
-if (submitButton) {
-    submitButton.addEventListener("click", handleLogin);
-}
+submitButton.addEventListener('click', () => {
+console.log("Username:", username?.value, "Password:", password?.value);
+userService.login(username.value, password.value)
+    .then(user => console.log("Logged in as:", user))
+    .catch(err => console.error("Login failed:", err.message));
 
-const logoutElement = document.querySelector('#logout');
-if (logoutElement) {
-    logoutElement.addEventListener('click', handleLogout);
-}
-
-checkLoginStatus();
+})
