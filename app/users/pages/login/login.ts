@@ -38,9 +38,18 @@ hyperlink.addEventListener('click', () => {
 });
 
 submitButton.addEventListener('click', () => {
+ event.preventDefault(); // Prevents the page from reloading
 console.log("Username:", username?.value, "Password:", password?.value);
 userService.login(username.value, password.value)
-    .then(user => console.log("Logged in as:", user))
+    .then(user => {
+      console.log("Logged in as:", user);
+      if(user.role === 'guide')
+      { 
+        sessionStorage.setItem('guideID', user.id);
+      }
+       window.location.href = "../../../tours/pages/tourMainPage/tourMainPage.html";
+    })
     .catch(err => console.error("Login failed:", err.message));
-
-})
+   
+}
+)

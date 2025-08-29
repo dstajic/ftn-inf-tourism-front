@@ -9,13 +9,13 @@ const tourService = new TourServices();
 
 document.addEventListener('DOMContentLoaded', () => {
   const tourListElement = document.getElementById('tourList');
-
+  const guideID = parseInt(sessionStorage.getItem('guideID'));
   if (!tourListElement) {
     console.error("Element with id 'tourList' not found.");
     return;
   }
 
-  tourService.getAllTours(0, 1, 10, 'Name', 'ASC')
+  tourService.getAllTours(guideID, 1, 10, 'Name', 'ASC')
     .then((tourList: Tour[]) => {
       console.log("Fetched tours:", tourList);
 

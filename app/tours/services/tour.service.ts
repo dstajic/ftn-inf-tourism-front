@@ -23,9 +23,10 @@ export class TourServices {
       return response.json();
     })
     .then(data => {
-      console.log("Raw API response:", data);  
-      return data.data;  
-    })
+  // Handle both cases: plain array or wrapped object
+  if (Array.isArray(data)) return data;       
+  return data.data ?? [];                      
+})
     .catch(error => {
       console.error('Error fetching tours:', error);
       throw error;
